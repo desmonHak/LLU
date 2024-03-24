@@ -4,6 +4,7 @@
 *.pyz
 *.pyc
 *.c
+*.h
 *.json
 
 # dirs
