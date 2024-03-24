@@ -1,5 +1,5 @@
 from os import getcwd
-from os.path import isfile
+from os.path import isfile, join as os_join
 from random import randint
 from re import MULTILINE, findall
 from colorama           import Fore, Back, init
@@ -8,10 +8,11 @@ from pygments.formatters import Terminal256Formatter
 from pygments.lexers import get_lexer_by_name
 
 class FuncFormat:
-    def __init__(self, name_file) -> None:
+    def __init__(self, ruta, name_file) -> None:
         self.name_file = name_file
         self.funcs = []
-        for func in self.get_declaration_funcs(self.name_file): 
+        self.ruta = ruta
+        for func in self.get_declaration_funcs(): 
             self.funcs.append(self.Format(func))
     
     class Format:
@@ -54,11 +55,13 @@ class FuncFormat:
         file.close()
         return f"f_{self.name_file}"
         
-    def get_declaration_funcs(self, name_file):
-        if isfile(name_file):
-            with open(name_file, 'r') as archivo:
+    def get_declaration_funcs(self):
+        if isfile(os_join(self.ruta, self.name_file)):
+            with open(os_join(self.ruta, self.name_file), 'r') as archivo:
                 contenido_archivo = archivo.read()
                 return findall(r"^(?!#)*(\w+(?:\s+\w+)*)(?:\**)?\s+(?:\**)?\s*(__attribute__.*\))?\s*(?:\**)?(\w+_?\w+)\s*\((.*\n*)\)\s*{", contenido_archivo, MULTILINE)
+        else: raise Exception(f"Error no existe el archivo {os_join(self.ruta, self.name_file)}")
+        # crear error personalizado
 
     def get_funcs_name(self, declaration_funcs):
         funcs_name = []

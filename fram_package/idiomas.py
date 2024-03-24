@@ -2,7 +2,6 @@ from os  import getcwd, path
 from ast import literal_eval
 from sys import platform
 
-
 class Idiomas:
     def __init__(self, idioma="es_ES"):
         """_summary_
@@ -44,22 +43,23 @@ class Idiomas:
 
     def loadLenguaje(self, ruta : dict = [getcwd() , "fram_package", "idiomas"]):
         # if platform == "win32" or platform == "linux":
-        if platform in ["win32", "linux"]:
-            ruta = path.join(ruta)
+        if platform in ["win32", "linux", "linux2"]:
+            ruta = path.join(*ruta)
         else:
             Exception("Su sistema no pudo ser identificado {}".format(self.idioma))
 
-        file = ruta + self.idioma + ".json"
+        file = path.join(ruta, self.idioma + ".json")
 
         if not path.isfile(file):
             raise Exception("El archivo '{}' no se encuentra.".format(file))
-
-        try:
-            return literal_eval(file.read())
-        except SyntaxError:
-            raise Exception(
-                "El archivo '{}' no tiene la sintaxis correcta".format( ruta + self.idioma + ".json" )
-            )
+        
+        with open(file, 'r') as file:
+            try:
+                return literal_eval(file.read())
+            except SyntaxError:
+                raise Exception(
+                    "El archivo '{}' no tiene la sintaxis correcta".format( ruta + self.idioma + ".json" )
+                )
 
     def setIdioma(self, idioma):
         """_summary_

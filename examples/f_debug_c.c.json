@@ -1,0 +1,42 @@
+{
+    "name_file" : "debug_c.c",
+    "funcs"     : {
+        "0" : {
+            "type_return" : "LONG WINAPI",
+            "attributes"  : [],
+            "name_func"   : "ExceptionHandler",
+            "args"        : ["EXCEPTION_POINTERS *ExceptionInfo"]
+            },
+        "1" : {
+            "type_return" : "void",
+            "attributes"  : ["__attribute__((constructor))"],
+            "name_func"   : "__constructor_debug_c__",
+            "args"        : []
+            },
+        "2" : {
+            "type_return" : "void",
+            "attributes"  : ["__attribute__((destructor))"],
+            "name_func"   : "__destructor_debug_c__",
+            "args"        : []
+            },
+        "3" : {
+            "type_return" : "const char",
+            "attributes"  : [],
+            "name_func"   : "get_level_debug",
+            "args"        : ["DebugLevel level"]
+            },
+        "4" : {
+            "type_return" : "void",
+            "attributes"  : [],
+            "name_func"   : "debug_set_level",
+            "args"        : ["DebugLevel level"]
+            },
+        "5" : {
+            "type_return" : "void",
+            "attributes"  : [],
+            "name_func"   : "debug_print",
+            "args"        : ["DebugLevel level", "const char *fmt", "..."]
+            }
+        },
+    "numer_funcs" : 6
+}

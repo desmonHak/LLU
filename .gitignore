@@ -3,9 +3,6 @@
 *.o
 *.pyz
 *.pyc
-*.c
-*.h
-*.json
 
 # dirs
 __pycache__

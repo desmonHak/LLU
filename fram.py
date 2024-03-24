@@ -5,6 +5,7 @@ from argparse           import ArgumentParser
 from os                 import getcwd, mkdir
 from os.path            import isfile, exists, join as os_join
 from getpass            import _raw_input
+from ast                import literal_eval
 
 from loads_files import *
 from fram_package.ofuscator_call import *
@@ -91,23 +92,24 @@ if __name__ == '__main__':
     loadConfFile()
     print_tree(get_directory())
     
-    _FuncFormat = FuncFormat("example.c")
+    
+    _FuncFormat = FuncFormat(os_join(getcwd(), "examples"), "example.c")
     for func in _FuncFormat.funcs:
         func.print_format()
         func.info_format()
     print(_FuncFormat.create_enum_funcs_name(_FuncFormat.funcs))
-    _FuncFormat = FuncFormat("debug_c.c")
+    _FuncFormat = FuncFormat(os_join(getcwd(), "examples"), "example.c")
     for func in _FuncFormat.funcs:
         func.print_format()
         func.info_format()
     print_color_c_format(_FuncFormat.create_enum_funcs_name(_FuncFormat.funcs))
-    print_instrucciones(disassemble_file("main.o"))
+    print_instrucciones(disassemble_file(os_join(getcwd(), "examples", "main.o")))
     _FuncFormat.SaveFuncFormatJson()
 
 
     from cle.backends.coff import CoffParser
 
-    with open("main.o", 'rb') as f:
+    with open(os_join(getcwd(), "examples", "main.o"), 'rb') as f:
         data = f.read()
     coff_parser = CoffParser(data)
     header = coff_parser.header
