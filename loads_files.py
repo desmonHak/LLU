@@ -2,6 +2,7 @@ from os import walk
 from hashlib import md5
 from requests import request, ConnectionError
 from random import randint
+from ast import literal_eval
 
 from fram_package.get_info_system import ThisSysten
 
@@ -22,6 +23,7 @@ excluir_archivos = [
     "fram.py",
     "loads_files.py"
 ]
+
 def add_file_excluir(name_file): excluir_archivos.append(name_file)
 def add_dir_excluir  (name_dir): excluir_directorios.append(name_dir)
 

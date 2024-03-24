@@ -1,3 +1,7 @@
+from os import getcwd
+from ast import literal_eval
+from sys import platform
+
 class Idiomas:
     
     def __init__(self, idioma="es_ES"):
@@ -33,43 +37,21 @@ class Idiomas:
             self.de_DE,
             self.esperanto
         ]
-        
         self.idioma = idioma
+        self.idioma_data = self.loadLenguaje()
         #print(self.idioma)
-        
-        if self.es_ES == self.idioma: # Espanol
-            # textos de errores:
-            self.TextUnknownOS = "No se pudo identificar el OS en el que se esta trabajando."
-            
-        elif self.en_US == self.idioma: # Ingles
-            self.TextUnknownOS = "Could not identify the OS being worked on"
-            
-        elif self.zh_CN == self.idioma: # Chino
-            self.TextUnknownOS = "无法识别正在使用的操作系统"
-            
-        elif self.ru_RU == self.idioma: # Ruso 
-            self.TextUnknownOS = "Не удалось определить ОС, над которой ведется работа"
 
-        elif self.fr_FR == self.idioma: # Frances(Francia)
-            self.TextUnknownOS = "Impossible d'identifier le système d'exploitation sur lequel on travaille"
-            
-        elif self.ar_EG == self.idioma: # Arabe Egipto(el mas similar al estandar)
-            self.TextUnknownOS = "تعذر تحديد نظام التشغيل قيد العمل"
-
-        elif self.ja_JP == self.idioma: # Japones
-            self.TextUnknownOS = "動作しているOSを特定できませんでした"
-
-        elif self.de_DE == self.idioma: # Aleman(Alemania)
-            self.TextUnknownOS = "Das Betriebssystem, an dem gearbeitet wird, konnte nicht identifiziert werden"
-      
-        elif self.esperanto == self.idioma: # esperanto
-            self.TextUnknownOS = "Ne eblis identigi la OS prilaborata"
+    def loadLenguaje(self, ruta=f"{getcwd()}/fram_package/idiomas/"):
+        if   platform == "win32":                         ruta = "\\".join(ruta.split("/"))
+        elif platform == "linux" or platform == "linux2": ruta = "/".join(ruta.split("\\"))
+        else:                                             Exception("Su sistema no pudo ser identificado {}".format(self.idioma))
+        file = None
+        try: file = open(ruta + self.idioma + ".json")
+        except FileNotFoundError: raise Exception("Este archivo no se encuentra {}".format(ruta + self.idioma + ".json"))
+        try: return literal_eval(file.read())
+        except SyntaxError: raise Exception("El archivo {} no tiene la sintaxis correcta".format(ruta + self.idioma + ".json"))
     
-        else:
-            raise Exception("Este idioma no se encuentra {}".format(self.idioma))
-            
-    def loadLenguaje(self):
-        
+    
     def setIdioma(self, idioma):
         """_summary_
             Esta funcion cambia de idioma el programa

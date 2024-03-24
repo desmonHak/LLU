@@ -2,14 +2,14 @@ from sys                import exit, argv
 from colorama           import Fore, Back, init
 from colorama.ansi      import clear_screen, AnsiCursor
 from argparse           import ArgumentParser
-from os import getcwd
-from os.path import isfile
-
+from os                 import getcwd, mkdir
+from os.path            import isfile, exists, join as os_join
+from getpass            import _raw_input
 
 from loads_files import *
 from fram_package.ofuscator_call import *
-from fram_package.idiomas import *
 from fram_package.disassembly_bytes import *
+from fram_package.idiomas import Idiomas
 
 if __name__ == '__main__':
     init()
@@ -53,6 +53,42 @@ if __name__ == '__main__':
             
     parser = parser.parse_args()
     
+    info_system = ThisSysten()
+    data_conf   = None
+    idioma = None
+    
+    def createConfFileInit(ruta):
+        print(ruta)
+        file = open(ruta, "w")
+        file.close()
+    def loadDefaultValue():
+        idioma = Idiomas(parser.lenguaje)
+    def loadConfFile():
+        
+        if exists(os_join(getcwd(), "conf")):
+            if exists(os_join(getcwd(), "conf", "init.json")) == False:
+                # si no existe el archivo init.json crearlo
+                if "y" in _raw_input("desea crear un archivo de configuracion init.json?(y/n): ").lower().split(" "):
+                    createConfFileInit(os_join(getcwd(), "conf", "init.json"))
+            else:
+                # si existe cargarlo
+                file = open(os_join(getcwd(), "conf", "init.json"))
+                try: data_conf = literal_eval(file.read())
+                except SyntaxError: 
+                    print(f"El archivo {os_join(getcwd(), 'conf')}init.json no contiene una sintaxis correcta.\nCorigalo o borre el archivo. Cargando los valores por defecto")
+                    loadDefaultValue()
+                    return False # error
+                file.close()
+                idioma = Idiomas(data_conf["idioma"])
+        else: 
+            print(f"Creando el directorio: {os_join(getcwd(), 'conf')}")
+            mkdir(os_join(getcwd(), "conf"))
+            
+            createConfFileInit(os_join(getcwd(), 'conf', "init.json"))
+            loadConfFile() # volver a cargar el archivo de configuracion una vez creado
+        return True # todo ok
+
+    loadConfFile()
     print_tree(get_directory())
     
     _FuncFormat = FuncFormat("example.c")
