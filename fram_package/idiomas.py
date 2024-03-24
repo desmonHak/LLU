@@ -68,6 +68,8 @@ class Idiomas:
         else:
             raise Exception("Este idioma no se encuentra {}".format(self.idioma))
             
+    def loadLenguaje(self):
+        
     def setIdioma(self, idioma):
         """_summary_
             Esta funcion cambia de idioma el programa

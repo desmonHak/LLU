@@ -1,0 +1,10 @@
+# estensiones:
+*.exe
+*.o
+*.pyz
+*.pyc
+*.c
+*.json
+
+# dirs
+__pycache__
