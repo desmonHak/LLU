@@ -97,18 +97,18 @@ def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
     for ruta in tree_dir.keys():
         for archivo in tree_dir[ruta]:
             print(archivo, archivo in excluir_files)
-            if (archivo not in excluir_files):
+            if archivo not in excluir_files:
                 # si el archivo no se encuentra en la lista de archivos a excluir lo anadimos
 
-                _file_ = path.join(ruta, archivo)
+                file_path = path.join(ruta, archivo)
 
-                with open(_file_, "rb") as file:
+                with open(file_path, "rb") as file:
                     hashString = md5(file.read()).hexdigest()
 
                     if debug:
-                        print("hash del archivo ({}): {}".format(_file_, hashString))
+                        print("hash del archivo ({}): {}".format(file_path, hashString))
 
-                dict_hash_dir.update({_file_:hashString})
+                dict_hash_dir.update({file_path:hashString})
                 print(dict_hash_dir)
 
     return dict_hash_dir
@@ -122,17 +122,16 @@ def print_dict_hash_dir(dict_hash_dir):
     for _hash in dict_hash_dir.keys():
         print("hash -> ({}) ruta -> ({})".format(_hash, dict_hash_dir[_hash]))
 
-def write_dict_hash_dir(dict_hash_dir, file_name="file.json"):
+def write_dict_hash_dir(dict_hash_dir, filename="file.json"):
     """_summary_
         Se escribe los datos de un diccionario hash's y archivos en formato json,
         por defecto en un archivo llamado "file.json"
     Args:
         dict_hash_dir (dict): diccionario de hash's y archivos
-        file_name (str, optional): nombre del archivo .json de salida. Defaults to "file.json".
-    """
-    _file = open(file_name, "w")
-    _file.write(str(dict_hash_dir))
-    _file.close()
+        filename (str, optional): nombre del archivo .json de salida. Defaults to "file.json".
+    """    
+    with open(filename, 'w') as file:
+        file.write(str(dict_hash_dir))
 
 if __name__ == "__main__":
 

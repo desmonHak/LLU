@@ -25,7 +25,7 @@ class Idiomas:
         self.de_DE = "de_DE"  # Aleman(Alemania)
         self.esperanto = "esperanto"  # esperanto
 
-        self.ALL_LENGUAJE = [
+        self.ALL_LENGUAJE = {
             self.es_ES,
             self.en_US,
             self.zh_CN,
@@ -35,15 +35,14 @@ class Idiomas:
             self.ja_JP,
             self.de_DE,
             self.esperanto,
-        ]
+        }
 
         self.idioma = idioma
         self.idioma_data = self.loadLenguaje()
         # print(self.idioma)
 
     def loadLenguaje(self, ruta : dict = [getcwd() , "fram_package", "idiomas"]):
-        # if platform == "win32" or platform == "linux":
-        if platform in ["win32", "linux", "linux2"]:
+        if platform in ["win32", "linux"]:
             ruta = path.join(*ruta)
         else:
             Exception("Su sistema no pudo ser identificado {}".format(self.idioma))
@@ -57,9 +56,7 @@ class Idiomas:
             try:
                 return literal_eval(file.read())
             except SyntaxError:
-                raise Exception(
-                    "El archivo '{}' no tiene la sintaxis correcta".format( ruta + self.idioma + ".json" )
-                )
+                raise Exception("El archivo '{}' no tiene la sintaxis correcta".format(file))
 
     def setIdioma(self, idioma):
         """_summary_

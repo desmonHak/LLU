@@ -6,3 +6,5 @@
 
 # dirs
 __pycache__
+.venv
+testing.py
