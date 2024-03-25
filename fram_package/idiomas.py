@@ -58,9 +58,7 @@ class Idiomas:
             try:
                 return literal_eval(file.read())
             except SyntaxError:
-                raise Exception(
-                    "El archivo '{}' no tiene la sintaxis correcta".format( ruta + self.idioma + ".json" )
-                )
+                raise Exception("El archivo '{}' no tiene la sintaxis correcta".format(file))
 
     def setIdioma(self, idioma):
         """_summary_

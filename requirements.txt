@@ -1,0 +1,13 @@
+archinfo==9.2.95
+bitarray==2.9.2
+bitstring==4.1.4
+capstone==5.0.1
+cffi==1.16.0
+cle==9.2.95
+colorama==0.4.6
+pefile==2023.2.7
+pycparser==2.21
+pyelftools==0.31
+Pygments==2.17.2
+pyvex==9.2.95
+sortedcontainers==2.4.0
