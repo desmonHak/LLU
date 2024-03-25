@@ -14,6 +14,9 @@ class Idiomas:
         Raises:
             Exception: _description_
         """
+        
+        if idioma == None: self.idioma = "es_ES"
+        else: self.idioma      = idioma
 
         self.es_ES = "es_ES"  # Espanol
         self.en_US = "en_US"  # Ingles
@@ -26,32 +29,30 @@ class Idiomas:
         self.esperanto = "esperanto"  # esperanto
 
         self.ALL_LENGUAJE = [
-            self.es_ES,
-            self.en_US,
-            self.zh_CN,
-            self.ru_RU,
-            self.fr_FR,
-            self.ar_EG,
-            self.ja_JP,
-            self.de_DE,
-            self.esperanto,
+            self.es_ES, self.en_US, self.zh_CN,
+            self.ru_RU, self.fr_FR, self.ar_EG,
+            self.ja_JP, self.de_DE, self.esperanto,
         ]
 
-        self.idioma = idioma
         self.idioma_data = self.loadLenguaje()
+        self.ruta        = None
         # print(self.idioma)
 
+    def getValKeyIdioma(self, key):
+        try: return self.idioma_data[key]
+        except KeyError: raise Exception("la key {} no se encuentra en {}".format( self.ruta + self.idioma + ".json" ))
+
     def loadLenguaje(self, ruta : dict = [getcwd() , "fram_package", "idiomas"]):
+        
         # if platform == "win32" or platform == "linux":
-        if platform in ["win32", "linux", "linux2"]:
-            ruta = path.join(*ruta)
-        else:
-            Exception("Su sistema no pudo ser identificado {}".format(self.idioma))
+        if platform in ["win32", "linux", "linux2"]: ruta = path.join(*ruta)
+        else: Exception("Su sistema no pudo ser identificado {}".format(self.idioma))
 
         file = path.join(ruta, self.idioma + ".json")
 
-        if not path.isfile(file):
-            raise Exception("El archivo '{}' no se encuentra.".format(file))
+        if not path.isfile(file): raise Exception("El archivo '{}' no se encuentra.".format(file))
+        
+        self.ruta = ruta
         
         with open(file, 'r') as file:
             try:

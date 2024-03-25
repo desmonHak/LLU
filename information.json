@@ -1,0 +1,23 @@
+{
+    "version": 1.0,
+
+    "doc": "",
+
+    "autor": {
+        "usuario": ["zetgit-dev", "desmon"],
+        "github": [
+            "https://github.com/zetgit-dev",
+            "https://github.com/desmonHak/"
+        ]
+    },
+
+    "contribuidores": [{
+            "usuario": "desmon",
+            "github": "https://github.com/desmonHak/"
+        },
+        {
+            "usuario": "zetgit-dev",
+            "github": "https://github.com/zetgit-dev"
+        }
+    ]
+}
