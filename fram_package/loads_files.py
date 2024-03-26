@@ -157,7 +157,7 @@ def write_dict_hash_dir(dict_hash_dir, file_name="file.json"):
     _file.write(str(dict_hash_dir))
     _file.close()
 
-def check_updates(users=["desmonHak", "zetgit-dev"], url="https://raw.githubusercontent.com/{}/framework-c/main/file.json", filename="file_check_update.json", debug=False, fileCheck="file.json"):
+def check_updates(users=["desmonHak"], url="https://raw.githubusercontent.com/{}/LLU/main/file.json", filename="file_check_update.json", debug=False, fileCheck="file.json"):
     
     _file = None
     for user in users:
