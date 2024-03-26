@@ -1,3 +1,29 @@
 {
-    "TextUnknownOS" : "Could not identify the OS being worked on"
+    "error.py": {
+        "TextUnknownOS": "The OS being worked on could not be identified..",
+        "ConnectionError": "No connection could be established",
+        "NotFoundThisFile": "File {} not found",
+        "KeyValueErrorConfUser": "The key {} was not found in {}"
+    },
+    "main_arg_parse.py": {
+        "ArgumentParser": {
+            "description": "Low Level Utils",
+            "epilog": ""
+        },
+        "1": {
+            "flag_s": "-r",
+            "flag_l": "--route",
+            "help": "Path of the project containing all *.c and all *.h"
+        },
+        "2": {
+            "flag_s": "-mf",
+            "flag_l": "--main-file",
+            "help": "Path or name of the file containing the main function. main.c by default"
+        },
+        "4": {
+            "flag_s": "-g",
+            "flag_l": "--gui",
+            "help": "Activate the GUI"
+        }
+    }
 }

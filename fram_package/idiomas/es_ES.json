@@ -1,8 +1,29 @@
 {
-    "error.py" : {
-        "TextUnknownOS" : "No se pudo identificar el OS en el que se esta trabajando.",
-        "ConnectionError" : "No se pudo establecer conexion",
-        "NotFoundThisFile" : "El archivo {} no se encontre",
-        "KeyValueErrorConfUser" : "La key {} no se encontro en {}"
+    "error.py": {
+        "TextUnknownOS": "No se pudo identificar el OS en el que se esta trabajando.",
+        "ConnectionError": "No se pudo establecer conexion",
+        "NotFoundThisFile": "El archivo {} no se encontre",
+        "KeyValueErrorConfUser": "La key {} no se encontro en {}"
+    },
+    "main_arg_parse.py": {
+        "ArgumentParser": {
+            "description": "Utilidades de bajo nivel",
+            "epilog": ""
+        },
+        "1": {
+            "flag_s": "-r",
+            "flag_l": "--ruta",
+            "help": "Ruta del proyecto que contiene todos los *.c y todos los *.h"
+        },
+        "2": {
+            "flag_s": "-mf",
+            "flag_l": "--main-file",
+            "help": "Ruta o nombre del archivo que contiene la funcion main. main.c por defecto"
+        },
+        "4": {
+            "flag_s": "-g",
+            "flag_l": "--gui",
+            "help": "Activar la GUI"
+        }
     }
 }
