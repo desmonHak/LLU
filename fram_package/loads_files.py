@@ -19,16 +19,11 @@ excluir_directorios = [
     ".dist",
     ".vscode",
     ".git",
-    "fram_package",
 ]
 excluir_archivos = [
     # archivos a excluir de la recopilacion
     "__init__.py",
-    "file.json",
-    "get_hash.py",
     "file_check_update.json",
-    "fram.py",
-    "loads_files.py"
 ]
 
 def load_file(file):
@@ -106,7 +101,7 @@ def print_tree(tree_dir, excluir_files=False):
         #print("-> {}".format(ruta))
             for archivo in tree_dir[ruta]:
                 if excluir_files and archivo not in excluir_files:
-                    print("[*] ruta -> ({}) archivo -> ({})".format(ruta, archivo))
+                    print(f"[*] ruta -> ({Fore.LIGHTMAGENTA_EX}{ruta}{Fore.RESET}) archivo -> ({Fore.LIGHTGREEN_EX}{archivo}{Fore.RESET})")
 
 def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
     """_summary_
@@ -138,7 +133,7 @@ def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
                     hashString = md5(file.read()).hexdigest()
 
                     if debug:
-                        print("hash del archivo ({}): {}".format(_file_, hashString))
+                        print(f"hash del archivo ({Fore.LIGHTMAGENTA_EX}{_file_}{Fore.RESET}): {Fore.LIGHTGREEN_EX}{hashString}{Fore.RESET}")
 
                 dict_hash_dir.update({_file_:hashString})
     print(highlight(formater_to_json(dict_hash_dir), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula")))
@@ -223,7 +218,8 @@ def check_updates(users=["desmonHak"], url="https://raw.githubusercontent.com/{}
             dataOriginal = load_file(fileCheck)
             
             if len(dataDownload) != len(dataOriginal):
-                print("{}\n{}\nA habido cambios en el tamano de los archivos de hash'h, por lo que hay actualizacion.".format(dataDownload, dataOriginal))
+                
+                print(f'Datos nuevos: {highlight(formater_to_json(dataDownload), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula"))}\nDatos antiguos: {highlight(formater_to_json(dataOriginal), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula"))}\nA habido cambios en el tamano de los archivos de hash\'h, por lo que hay actualizacion.')
                 # son diferentes, retornar True, hay actualizacion
                 return True
             else:

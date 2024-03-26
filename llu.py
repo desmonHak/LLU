@@ -7,10 +7,10 @@ from fram_package.loads_files    import *
 with open("information.json", "r") as file:
     information = literal_eval(file.read())
 
-__version__ = information["version"]
-__doc__ = information["doc"]
-__autor__ =  information["autor"]
-__contribuidores__ = information["contribuidores"]
+__version__        = information ["version"]
+__doc__            = information ["doc"]
+__autor__          =  information["autor"]
+__contribuidores__ = information ["contribuidores"]
 
 if __name__ == "__main__":
 
