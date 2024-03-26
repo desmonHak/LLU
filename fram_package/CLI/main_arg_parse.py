@@ -2,6 +2,7 @@ from os.path    import join
 from os         import getcwd
 from argparse   import ArgumentParser
 from colorama   import init
+from sys        import argv
 
 from fram_package.idiomas           import Idiomas
 
@@ -40,16 +41,16 @@ class ParserClass:
             "-l", "--lenguaje", help="idioma a usar (es_ES) / ", type=str, default="es_ES"
         )
 
-        """parser.add_argument(
+        self.parser.add_argument(
                     "-f",
                     "--gui",        
                     help="activar la gui", 
-                    type=str,
-                )"""
+                    type=bool,
+                    default = False,
+                )
 
-        """if len(argv) <= 1:
-                parser.print_help()
-                exit(1)"""
+        if len(argv) <= 1:
+                self.parser.print_help()
 
         self.parser = self.parser.parse_args()
         # establecer el idioma pasado por linea de comandos si el constructor no recibio ningun valor lenguaje

@@ -10,7 +10,7 @@ from pygments.formatters import Terminal256Formatter
 from pygments.lexers     import get_lexer_by_name
 
 from fram_package.get_info_system import ThisSysten
-from fram_package.error           import ErrorDeConexion, NotFoundThisFile
+from fram_package.error           import ConnectionError, NotFoundThisFile
 from fram_package.load_conf_user  import literal_eval
 
 excluir_directorios = [
@@ -237,7 +237,7 @@ def check_updates(users=["desmonHak"], url="https://raw.githubusercontent.com/{}
             print("No se pudo obtener los datos desde ({})".format(url.format(user)))
         
     if _file != None: return _file
-    else: raise ErrorDeConexion
+    else: raise ConnectionError
 
 if __name__ == "__main__":
 

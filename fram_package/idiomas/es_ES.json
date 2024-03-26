@@ -1,3 +1,8 @@
 {
-    "TextUnknownOS" : "No se pudo identificar el OS en el que se esta trabajando."
+    "error.py" : {
+        "TextUnknownOS" : "No se pudo identificar el OS en el que se esta trabajando.",
+        "ConnectionError" : "No se pudo establecer conexion",
+        "NotFoundThisFile" : "El archivo {} no se encontre",
+        "KeyValueErrorConfUser" : "La key {} no se encontro en {}"
+    }
 }

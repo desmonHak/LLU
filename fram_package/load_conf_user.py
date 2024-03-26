@@ -5,7 +5,7 @@ from ast        import literal_eval
 
 from fram_package.get_info_system   import ThisSysten
 from fram_package.idiomas           import Idiomas
-from fram_package.error             import UnknownOS
+from fram_package.error             import KeyValueErrorConfUser
 
 class ConfUser:
     def __init__(self):
@@ -27,6 +27,10 @@ class ConfUser:
     def loadDefaultValue(self):
         # self.lenguaje = Idiomas()
         self.lenguaje = "es_ES"
+    
+    def get_valu_conf(self, key):
+        try: self.lenguaje = self.data_conf[key] 
+        except KeyError: raise KeyValueErrorConfUser(key, self.__conf_file_user__, idioma=Idiomas(self.lenguaje))
         
     def loadConfFile(self):
         data_conf = None
@@ -48,7 +52,7 @@ class ConfUser:
                     
                 #try: self.lenguaje = Idiomas(data_conf["lenguaje"])  
                 try: self.lenguaje = data_conf["lenguaje"] 
-                except KeyError: print(f"No se establecido ningun lenguaje en {self.__conf_file_user__}") # self.loadDefaultValue()
+                except KeyError: print(f"No se establecido ningun lenguaje en {self.__conf_file_user__}") 
         else:
             print(f"Creando el directorio: {join(getcwd(), 'conf')}")
             mkdir(join(getcwd(), "conf"))

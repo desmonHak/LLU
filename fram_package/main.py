@@ -15,10 +15,10 @@ def main():
     
     user_conf = ConfUser()                   # cargar la configuracion de usuario
     parser = ParserClass(user_conf.lenguaje) # obtener los parametros de la CLI
-    idioma = Idiomas(parser.lenguaje)
+    idioma = Idiomas(parser.parser.lenguaje)
     gui = GUI(idioma)
 
-    if len(argv) <= 1: # si ejecuto sin parametros fram.py, iniciar la GUI
+    if parser.parser.gui: # si ejecuto con --gui, iniciar la GUI
         gui.init_GUI() # aun no se definio su comportamiento
 
     _FuncFormat = FuncFormat(join(getcwd(), "examples"), "example.c")
