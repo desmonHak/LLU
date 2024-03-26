@@ -1,48 +1,64 @@
 {
-    "name_file" : "example.c",
-    "funcs"     : {
-        "0" : {
-            "type_return" : "int",
-            "attributes"  : [],
-            "name_func"   : "number_ranomd",
-            "args"        : []
-            },
-        "1" : {
-            "type_return" : "void",
-            "attributes"  : [],
-            "name_func"   : "hola_mundo",
-            "args"        : ["int a", "int c", "char d"]
-            },
-        "2" : {
-            "type_return" : "uint8_t",
-            "attributes"  : [],
-            "name_func"   : "adios_3mundo",
-            "args"        : ["void"]
-            },
-        "3" : {
-            "type_return" : "long long",
-            "attributes"  : ["__attribute__((destructor))"],
-            "name_func"   : "__destructor_debug_c__",
-            "args"        : []
-            },
-        "4" : {
-            "type_return" : "long",
-            "attributes"  : ["__attribute__((constructor))"],
-            "name_func"   : "mi_constructy",
-            "args"        : []
-            },
-        "5" : {
-            "type_return" : "char",
-            "attributes"  : ["__attribute__((atre2_ibuto1))", "__attribute__((atrib_uto1))", "__attribute__((atributo1))"],
-            "name_func"   : "a33423",
-            "args"        : []
-            },
-        "6" : {
-            "type_return" : "int",
-            "attributes"  : ["__attribute__((asdsa))"],
-            "name_func"   : "a34",
-            "args"        : []
-            }
+    "name_file": "example.c",
+    "funcs": {
+        "0": {
+            "type_return": "int",
+            "attributes": [],
+            "name_func": "number_ranomd",
+            "args": []
         },
-    "numer_funcs" : 7
+        "1": {
+            "type_return": "void",
+            "attributes": [],
+            "name_func": "hola_mundo",
+            "args": [
+                "int a",
+                "int c",
+                "char d"
+            ]
+        },
+        "2": {
+            "type_return": "uint8_t",
+            "attributes": [],
+            "name_func": "adios_3mundo",
+            "args": [
+                "void"
+            ]
+        },
+        "3": {
+            "type_return": "long long",
+            "attributes": [
+                "__attribute__((destructor))"
+            ],
+            "name_func": "__destructor_debug_c__",
+            "args": []
+        },
+        "4": {
+            "type_return": "long",
+            "attributes": [
+                "__attribute__((constructor))"
+            ],
+            "name_func": "mi_constructy",
+            "args": []
+        },
+        "5": {
+            "type_return": "char",
+            "attributes": [
+                "__attribute__((atre2_ibuto1))",
+                "__attribute__((atrib_uto1))",
+                "__attribute__((atributo1))"
+            ],
+            "name_func": "a33423",
+            "args": []
+        },
+        "6": {
+            "type_return": "int",
+            "attributes": [
+                "__attribute__((asdsa))"
+            ],
+            "name_func": "a34",
+            "args": []
+        }
+    },
+    "numer_funcs": "7"
 }

@@ -29,7 +29,7 @@ def main():
 
     print(_FuncFormat.create_enum_funcs_name(_FuncFormat.funcs))
 
-    _FuncFormat = FuncFormat(join(getcwd(), "examples"), "example.c")
+    _FuncFormat = FuncFormat(join(getcwd(), "examples"), "example.c", idioma=idioma)
 
     for func in _FuncFormat.funcs:
         func.print_format()

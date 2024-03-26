@@ -28,7 +28,7 @@ excluir_archivos = [
 ]
 
 def load_file(file):
-    """_summary_
+    """
         Cargamos el archivo json y lo formateamos a un dict
     Args:
         file (str): Nombre del archivo .json
@@ -54,7 +54,7 @@ def formater_to_json(data):
 
 def get_directory(ruta=".", debug=False, excluir_dir=excluir_directorios):
 
-    """_summary_
+    """
 
         Esta funcion obtiene la ruta de los archivos, y los
         archivos de forma recursiva y lo retorna en forma de diccionario
@@ -93,7 +93,7 @@ def get_directory(ruta=".", debug=False, excluir_dir=excluir_directorios):
     return arbol_directorios
 
 def print_tree(tree_dir, excluir_files=False):
-    """_summary_
+    """
         Imprimimos la ruta y cada archivo de un arbol en formato diccionaario
     Args:
         tree_dir (dict): arbol diccionario con archivos y rutas
@@ -105,7 +105,7 @@ def print_tree(tree_dir, excluir_files=False):
                     print(f"[*] ruta -> ({Fore.LIGHTMAGENTA_EX}{ruta}{Fore.RESET}) archivo -> ({Fore.LIGHTGREEN_EX}{archivo}{Fore.RESET})")
 
 def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
-    """_summary_
+    """
         Esta funcion obtiene los hash's de los archivos de un arbol de archivos
         y los almacena en un dicionario
     Args:
@@ -142,7 +142,7 @@ def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
     return dict_hash_dir
 
 def print_dict_hash_dir(dict_hash_dir):
-    """_summary_
+    """
         Se imprime un diccionario de hash's y archivos
     Args:
         dict_hash_dir (dict): diccionario de hash's y archivos
@@ -151,7 +151,7 @@ def print_dict_hash_dir(dict_hash_dir):
         print(f"hash -> ({Fore.LIGHTGREEN_EX}{_hash}{Fore.RESET}) ruta -> ({Fore.LIGHTMAGENTA_EX}{dict_hash_dir[_hash]}{Fore.RESET})")
 
 def write_dict_hash_dir(dict_hash_dir, file_name="file.json"):
-    """_summary_
+    """
         Se escribe los datos de un diccionario hash's y archivos en formato json,
         por defecto en un archivo llamado "file.json"
     Args:

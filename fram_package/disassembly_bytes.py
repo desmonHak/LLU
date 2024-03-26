@@ -13,6 +13,19 @@ class Instruccion:
         self.bytes       = _bytes
 
 def disassemble_bytes(data, arch=CS_ARCH_X86, mode=CS_MODE_32, offset=0):
+    """
+                descripcion
+            Args:
+                args1 (type_args1): descripcion args
+                args2 (type_args2, optional): descripcion args.
+                args3 (type_args3, optional): descripcion args
+
+            Raises:
+                UnknownOS: error que ocurre cuando la plataforma no puede identificarse
+
+            Returns:
+                type_return: descripcion del valor retornado
+    """
     instrucciones = {}
     md = Cs(arch, mode)
     # Determina la arquitectura basada en el nombre del archivo.
@@ -23,6 +36,19 @@ def disassemble_bytes(data, arch=CS_ARCH_X86, mode=CS_MODE_32, offset=0):
     return instrucciones
 
 def disassemble_file(file_path, arch=CS_ARCH_X86, mode=CS_MODE_32):
+    """
+                descripcion
+            Args:
+                args1 (type_args1): descripcion args
+                args2 (type_args2, optional): descripcion args.
+                args3 (type_args3, optional): descripcion args
+
+            Raises:
+                UnknownOS: error que ocurre cuando la plataforma no puede identificarse
+
+            Returns:
+                type_return: descripcion del valor retornado
+    """
     with open(file_path, 'rb') as f:
         data = f.read()
 
@@ -33,6 +59,19 @@ def disassemble_file(file_path, arch=CS_ARCH_X86, mode=CS_MODE_32):
     #     print(f"0x{insn.address:x}: {insn.mnemonic} {insn.op_str}")
 
 def print_instrucciones(Instrucciones):
+    """
+                descripcion
+            Args:
+                args1 (type_args1): descripcion args
+                args2 (type_args2, optional): descripcion args.
+                args3 (type_args3, optional): descripcion args
+
+            Raises:
+                UnknownOS: error que ocurre cuando la plataforma no puede identificarse
+
+            Returns:
+                type_return: descripcion del valor retornado
+    """
     for i in range(list(Instrucciones.keys())[0], list(Instrucciones.keys())[-1]):
         try:
 

@@ -4,7 +4,7 @@ from sys import platform
 
 class Idiomas:
     def __init__(self, idioma="es_ES"):
-        """_summary_
+        """
 
             Por defecto, el idioma es Espanol
 
@@ -39,11 +39,36 @@ class Idiomas:
         # print(self.idioma)
 
     def getValKeyIdioma(self, key):
+        """
+                descripcion
+            Args:
+                args1 (type_args1): descripcion args
+                args2 (type_args2, optional): descripcion args.
+                args3 (type_args3, optional): descripcion args
+
+            Raises:
+                UnknownOS: error que ocurre cuando la plataforma no puede identificarse
+
+            Returns:
+                type_return: descripcion del valor retornado
+        """
         try: return self.idioma_data[key]
         except KeyError: raise Exception("la key {} no se encuentra en {}".format( self.ruta + self.idioma + ".json" ))
 
     def loadLenguaje(self, ruta : dict = [getcwd() , "fram_package", "idiomas"]):
-        
+        """
+                    descripcion
+                Args:
+                    args1 (type_args1): descripcion args
+                    args2 (type_args2, optional): descripcion args.
+                    args3 (type_args3, optional): descripcion args
+
+                Raises:
+                    UnknownOS: error que ocurre cuando la plataforma no puede identificarse
+
+                Returns:
+                    type_return: descripcion del valor retornado
+        """
         # if platform == "win32" or platform == "linux":
         if platform in ["win32", "linux", "linux2"]: ruta = path.join(*ruta)
         else: Exception("Su sistema no pudo ser identificado {}".format(self.idioma))
@@ -61,7 +86,7 @@ class Idiomas:
                 raise Exception("El archivo '{}' no tiene la sintaxis correcta".format(file))
 
     def setIdioma(self, idioma):
-        """_summary_
+        """
             Esta funcion cambia de idioma el programa
         Args:r
             idioma (str): se recibe el idioma a cambiar

@@ -2,7 +2,7 @@
     "error.py": {
         "TextUnknownOS": "No se pudo identificar el OS en el que se esta trabajando.",
         "ConnectionError": "No se pudo establecer conexion",
-        "NotFoundThisFile": "El archivo {} no se encontre",
+        "NotFoundThisFile": "El archivo {} no se encontro",
         "KeyValueErrorConfUser": "La key {} no se encontro en {}"
     },
     "main_arg_parse.py": {
