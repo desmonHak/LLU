@@ -2,6 +2,12 @@
 #define __EXAMPLE_C__
 #include "example.c"
 
+int number_ranomd(){
+    int number = 0; // llu_utils: rand_number(0x00, 0xff, number)
+    return number;
+}
+
+
 void hola_mundo(int a, int c, char d) { 
     /*
      *  agrs: 
