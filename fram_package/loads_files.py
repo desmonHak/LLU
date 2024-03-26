@@ -2,6 +2,12 @@ from os       import walk, path
 from hashlib  import md5
 from random   import randint
 from requests import request, ConnectionError
+from colorama import Fore
+from json     import dumps
+
+from pygments            import highlight
+from pygments.formatters import Terminal256Formatter
+from pygments.lexers     import get_lexer_by_name
 
 from fram_package.get_info_system import ThisSysten
 from fram_package.error           import ErrorDeConexion, NotFoundThisFile
@@ -46,6 +52,9 @@ def load_file(file):
 
 def add_file_excluir(filename): excluir_archivos.append(filename)
 def add_dir_excluir  (dirname): excluir_directorios.append(dirname)
+
+def formater_to_json(data):
+    return dumps(data, indent=4)
 
 def get_directory(ruta=".", debug=False, excluir_dir=excluir_directorios):
 
@@ -119,7 +128,7 @@ def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
 
     for ruta in tree_dir.keys():
         for archivo in tree_dir[ruta]:
-            print(archivo, archivo in excluir_files)
+            #print(archivo, archivo in excluir_files)
             if (archivo not in excluir_files):
                 # si el archivo no se encuentra en la lista de archivos a excluir lo anadimos
 
@@ -132,7 +141,7 @@ def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
                         print("hash del archivo ({}): {}".format(_file_, hashString))
 
                 dict_hash_dir.update({_file_:hashString})
-                print(dict_hash_dir)
+    print(highlight(formater_to_json(dict_hash_dir), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula")))
 
     return dict_hash_dir
 
@@ -143,7 +152,7 @@ def print_dict_hash_dir(dict_hash_dir):
         dict_hash_dir (dict): diccionario de hash's y archivos
     """
     for _hash in dict_hash_dir.keys():
-        print("hash -> ({}) ruta -> ({})".format(_hash, dict_hash_dir[_hash]))
+        print(f"hash -> ({Fore.LIGHTGREEN_EX}{_hash}{Fore.RESET}) ruta -> ({Fore.LIGHTMAGENTA_EX}{dict_hash_dir[_hash]}{Fore.RESET})")
 
 def write_dict_hash_dir(dict_hash_dir, file_name="file.json"):
     """_summary_
@@ -220,7 +229,7 @@ def check_updates(users=["desmonHak"], url="https://raw.githubusercontent.com/{}
             else:
                 for _hash in dataOriginal.keys():
                     if _hash in dataDownload:
-                        print("El hash ({}) del archivo ({}) es correcto".format(_hash, dataDownload[_hash]))
+                        print(f"El hash ({Fore.LIGHTMAGENTA_EX}{dataDownload[_hash]}{Fore.RESET}) del archivo ({Fore.LIGHTGREEN_EX}{_hash}{Fore.RESET}) es correcto")
                     else:
                         print("Al parecer hubo cambios de esta version ({})".format(_hash))
                         return True # hay hash's diferentes, actualizacion
