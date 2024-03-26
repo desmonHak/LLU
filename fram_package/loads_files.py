@@ -24,6 +24,7 @@ excluir_archivos = [
     # archivos a excluir de la recopilacion
     "__init__.py",
     "file_check_update.json",
+    "load.json"
 ]
 
 def load_file(file):
