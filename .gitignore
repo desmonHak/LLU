@@ -1,8 +1,9 @@
-# estensiones:
+# extensiones:
 *.exe
 *.o
 *.pyz
 *.pyc
+*.bak
 
 # dirs
 __pycache__

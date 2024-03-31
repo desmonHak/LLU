@@ -1,166 +1,173 @@
-from os       import walk, path
-from hashlib  import md5
-from random   import randint
-from requests import request, ConnectionError
-from colorama import Fore
-from json     import dumps
-from ast      import literal_eval
+if __name__ == "__main__":
+    from os.path import dirname, abspath
+    from sys import path
+    path.append(dirname(dirname(abspath(__file__))))
+
+from pathlib             import Path
+from colorama            import Fore
+from typing              import Generator, Union
+from hashlib             import md5
+from random              import randint
+from requests            import request
 
 from pygments            import highlight
 from pygments.formatters import Terminal256Formatter
 from pygments.lexers     import get_lexer_by_name
 
+
 from fram_package.get_info_system import ThisSysten
 from fram_package.error           import NotFoundThisFile
 
-excluir_directorios = [
-    # directorios a excluir de la recopilacion
-    "__pycache__",
-    ".dist",
-    ".vscode",
-    ".git",
-]
-excluir_archivos = [
-    # archivos a excluir de la recopilacion
-    "__init__.py",
-    "file_check_update.json",
-    "file.json"
-]
+import re
+import json
 
-def load_file(file):
-    """
-        Cargamos el archivo json y lo formateamos a un dict
-    Args:
-        file (str): Nombre del archivo .json
-    """
+exclusion_patterns:dict = {
+    # directorios a ignorar
+    "directories": [
+        [".git"]
+    ],
+    # archivos a ignorar
+    "files": [
+        [".gitignore"]
+    ],
+    # ignorar cualquiera cosa cosa con este nombre
+    "*": [
+        # "*.so",
+        # "*.exe",
+        # "__pycache__"
+    ],
+}
 
+def load_file(filename) -> None:
+    """
+    """
     try:
-        file = open(file, "r")
-        # convertimos el json en un ficionario
-        _file = literal_eval(file.read())
-        # cerrar el archivo
-        file.close()
+        with open(filename, 'r') as file:
+            return json.loads(file.read())
 
-        return _file
     except FileNotFoundError:
-        print("Archivo de configuracion no encontrado: {}".format(file))
-        raise NotFoundThisFile(file)
+        print("Archivo de configuracion no encontrado: " + filename)
+        raise NotFoundThisFile(filename)
 
-def add_file_excluir(filename): excluir_archivos.append(filename)
-def add_dir_excluir  (dirname): excluir_directorios.append(dirname)
+def add_exclusion_pattern(exclusion_dict:dict = exclusion_patterns, exclusion: Union[str, list[str]] = None, category:str = None) -> None:
+    """
+        Añadir los archivos/directorios a excluir
+    Args:
+        exclusion_dict(dict): Defaults to exclusion_patterns, diccionario donde se guardan
+            las exclusiones (valores a los cuales no se les calculara el hash)
 
-def formater_to_json(data):
-    return dumps(data, indent=4)
+        exclusion(str|dict[str]): Defaults to None, exclusion que el cual se añaira a exclusion_dict
 
-def get_directory(ruta=".", debug=False, excluir_dir=excluir_directorios):
-
+        category(str): Defaults to None, esta sera la categoria en que entra exclusion para poderse
+            ignorar (directrios | archivo | *).
     """
 
-        Esta funcion obtiene la ruta de los archivos, y los
-        archivos de forma recursiva y lo retorna en forma de diccionario
+    if exclusion is None or category is None:
+        return
+
+    separator = ThisSysten().get_separator()
+
+    match category:
+        case "directories":
+            exclusion_dict["directories"].append(exclusion)
+        case "files":
+            exclusion_dict["files"].append(exclusion)
+        case "*":
+            if isinstance(exclusion, list):
+                exclusion = separator.join(exclusion)
+
+            exclusion_dict["*"].append(exclusion)
+        case _: return  # noqa: E701
+
+def format_to_json(data) -> str:
+    return json.dumps(data, indent=4, ensure_ascii=False)
+
+def load_gitignore ( gitignore: Path = Path(".gitignore"), exclude_patterns: dict = exclusion_patterns ) -> None:
+    """
+        Utiliza archivos y directorios del .gitignore añadiendolos al hashes_ignore
+        los cuales seran excluidos al calcular el hash para comprobar las actualizaciones
     Args:
-        ruta (str, optional): Defaults to ".". ruta desde donde comenzar a listar
-        debug (bool, optional): modo debug. Defaults to False. Permite activar el modo debug
-        excluir_dir (list, optional): lista de directorios a excluir
+        gitignore(Path): Defaults to Path(".gitignore"): ruta del .gitignore
+        exclude_hashes(dict): Defaults to hashes_ignore, variable del diccionario
+            que es utilizara para guardar los valores del gitignore y que se ignoren
+            al calcular el hash para las actualizaciones
+    """
 
-    Raises:
-        UnknownOS: Error que se lanza cuando la plataforma no puede ser identificada
+    if not gitignore.exists():
+        return
 
+    with open(gitignore, "r") as file:
+        for line in file.readlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                add_exclusion_pattern(exclude_patterns, re.escape(line).replace("\\*", ".*"), "*")
+
+def tree_directories ( path: Path = Path('.'), exclude_hashes: dict = exclusion_patterns, separator:chr = None, debug:bool = False) -> Generator:
+    """
+        Esta funcion retorna un generador el cual muestra todos los archivos
+        que existen en el proyecto de forma recursiva, ignorando todo lo que
+        este en exclude_hashes.
+
+    Args:
+        path(Path): Defaults to Path('.'), ruta desde donde inicia la busqueda
+        exclude_hashes(dict): Defaults to hashes_ignore, diccionario que contiene
+            los directorios y archivos a las cuales no se les calcurara el hash
+        separator(char): Defaults to '/', separador del sistema, siendo '/' para linux
+            y '\\' para windows
+    """
+
+    if separator is None:
+        separator = ThisSysten().get_separator()
+
+    for element in path.iterdir():
+        split_element = str(element).split(separator)
+
+        if any(re.match(pattern, str(element)) for pattern in exclude_hashes["*"]):
+            continue
+
+        if element.is_dir() and split_element not in exclude_hashes["directories"]:
+            yield from tree_directories(element, exclude_hashes, separator)
+
+        elif element.is_file() and split_element not in exclude_hashes["files"]:
+            yield element
+
+def get_hashes(tree_directories: Generator[Path, None, None] = tree_directories(), debug=False) -> dict:
+    """
+        Esta funcion obtiene los hashes de los archivos que devuelva el generador
+        de tree_directories
+    Args:
+        tree_directories(Generador): Defaults to tree_directories(), este generador
+            sera el que devuelva todos los archivos a los cuales se les tiene que calcular el hash
+            los cuales serviran para verificar las actualizaciones
+        debug(boolean): Defaults to False, esta bandera es para mostrar los archivos con sus
+            respectivos hashes que se van generando.
     Returns:
-        dict: diccionario con las rutas y los archivos, ruta:lista_archivos
+        dict: diccionario con las las rutas(archivos) y sus respectivos hashes
     """
+    hashes = {}
+    for element in tree_directories:
+        content = element.read_bytes()
+        hash_string = md5(content).hexdigest()
 
-    arbol_directorios = dict()
-    dire = list(walk(ruta, topdown=False))
+        hashes.update({str(element): hash_string})
 
-    _ThisSysten = ThisSysten()
-    for carpeta in dire:
-        estado = 0 # variable para controlar cuando anadir o no cambios al diccionario
-        # ('./.git/logs/refs/remotes/origin', [], ['HEAD'])
+        if debug:
+            print(f"hash del archivo ({Fore.LIGHTMAGENTA_EX}{element}{Fore.RESET}): {Fore.LIGHTGREEN_EX}{hash_string}{Fore.RESET}")
 
-        ruta_format_list = carpeta[0].split(_ThisSysten.splas)
-        # (".", "frames", "__pycache__")
+    return hashes
 
-        for carpetaAExcluir in excluir_dir:
-            if carpetaAExcluir in ruta_format_list:
-                estado = 1 # si se encontro el nombre de la carpeta a excluir en la ruta, se pone
-                # la variable estado a 1 para no anadirlo al bucle
-                break
+def print_tree (tree_directories: Generator[Path, None, None] = tree_directories()) -> None:
+    for element in tree_directories:
+        path = element.parent
+        file = element.name
+        print(f"[*] ruta -> ({Fore.LIGHTMAGENTA_EX}{path}{Fore.RESET}) archivo -> ({Fore.LIGHTGREEN_EX}{file}{Fore.RESET})")
 
-        if estado == 0:
-            arbol_directorios.update({carpeta[0]:carpeta[2]})
+def write_hashes(hashes:dict = None, file_name:str = "file.json") -> None:
+    if hashes is None:
+        return
 
-    return arbol_directorios
-
-def print_tree(tree_dir, excluir_files=False):
-    """
-        Imprimimos la ruta y cada archivo de un arbol en formato diccionaario
-    Args:
-        tree_dir (dict): arbol diccionario con archivos y rutas
-    """
-    for ruta in tree_dir.keys():
-        #print("-> {}".format(ruta))
-            for archivo in tree_dir[ruta]:
-                if excluir_files and archivo not in excluir_files:
-                    print(f"[*] ruta -> ({Fore.LIGHTMAGENTA_EX}{ruta}{Fore.RESET}) archivo -> ({Fore.LIGHTGREEN_EX}{archivo}{Fore.RESET})")
-
-def get_hash(tree_dir, debug=False, excluir_files=excluir_archivos):
-    """
-        Esta funcion obtiene los hash's de los archivos de un arbol de archivos
-        y los almacena en un dicionario
-    Args:
-        tree_dir (dict): arbol de directorios
-        debug (bool, optional): modo debug. Defaults to False.
-        excluir_files (list, optional): lista de archivos a excluir
-
-    Raises:
-        UnknownOS: error que ocurre cuando la plataforma no puede identificarse
-
-    Returns:
-        dict: se retorna un diccionario con los hash y la ruta mas el archivo, hash:archivo_ruta
-    """
-    dict_hash_dir = dict()
-    # _ThisSysten = ThisSysten()
-
-    for ruta in tree_dir.keys():
-        for archivo in tree_dir[ruta]:
-            #print(archivo, archivo in excluir_files)
-            if (archivo not in excluir_files):
-                # si el archivo no se encuentra en la lista de archivos a excluir lo anadimos
-
-                _file_ = path.join(ruta, archivo)
-
-                with open(_file_, "rb") as file:
-                    hashString = md5(file.read()).hexdigest()
-
-                    if debug:
-                        print(f"hash del archivo ({Fore.LIGHTMAGENTA_EX}{_file_}{Fore.RESET}): {Fore.LIGHTGREEN_EX}{hashString}{Fore.RESET}")
-
-                dict_hash_dir.update({_file_:hashString})
-    print(highlight(formater_to_json(dict_hash_dir), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula")))
-
-    return dict_hash_dir
-
-def print_dict_hash_dir(dict_hash_dir):
-    """
-        Se imprime un diccionario de hash's y archivos
-    Args:
-        dict_hash_dir (dict): diccionario de hash's y archivos
-    """
-    for _hash in dict_hash_dir.keys():
-        print(f"hash -> ({Fore.LIGHTGREEN_EX}{_hash}{Fore.RESET}) ruta -> ({Fore.LIGHTMAGENTA_EX}{dict_hash_dir[_hash]}{Fore.RESET})")
-
-def write_dict_hash_dir(dict_hash_dir, file_name="file.json"):
-    """
-        Se escribe los datos de un diccionario hash's y archivos en formato json,
-        por defecto en un archivo llamado "file.json"
-    Args:
-        dict_hash_dir (dict): diccionario de hash's y archivos
-        file_name (str, optional): nombre del archivo .json de salida. Defaults to "file.json".
-    """
-    _file = open(file_name, "w")
-    _file.write(str(dict_hash_dir))
-    _file.close()
+    with open(file_name, 'w') as file:
+        file.write(json.dumps(hashes, indent=4, ensure_ascii=False))
 
 def check_updates(user="desmonHak", url="https://raw.githubusercontent.com/{}/LLU/main/file.json", filename="file_check_update.json", debug=False, fileCheck="file.json"):
 
@@ -218,7 +225,7 @@ def check_updates(user="desmonHak", url="https://raw.githubusercontent.com/{}/LL
 
         if len(dataDownload) != len(dataOriginal):
 
-            print(f'Datos nuevos: {highlight(formater_to_json(dataDownload), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula"))}\nDatos antiguos: {highlight(formater_to_json(dataOriginal), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula"))}\nA habido cambios en el tamano de los archivos de hash\'h, por lo que hay actualizacion.')
+            print(f'Datos nuevos: {highlight(format_to_json(dataDownload), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula"))}\nDatos antiguos: {highlight(format_to_json(dataOriginal), lexer= get_lexer_by_name("json"), formatter=Terminal256Formatter(style="dracula"))}\nHubo cambios en el tamano de los archivos de hash\'h, por lo que hay actualizacion.')
             # son diferentes, retornar True, hay actualizacion
             return True
         else:
@@ -239,10 +246,8 @@ def check_updates(user="desmonHak", url="https://raw.githubusercontent.com/{}/LL
         raise ConnectionError
 
 if __name__ == "__main__":
-    print(check_updates())
-    # tree_dir = get_directory(debug=False)
-    # print_tree(tree_dir, excluir_files=excluir_archivos)
+    load_gitignore()
+    print_tree()
+    dict_hash_dir = get_hashes()
+    write_hashes(dict_hash_dir)
 
-    # dict_hash_dir = get_hash(tree_dir)
-    # print_dict_hash_dir(dict_hash_dir)
-    # write_dict_hash_dir(dict_hash_dir)

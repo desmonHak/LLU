@@ -1,18 +1,16 @@
 from os.path    import join 
 from os         import getcwd
-from sys        import argv
 
 from .GUI.main_GUI       import GUI
 from .CLI.main_arg_parse import ParserClass
 
-from .load_conf_user    import ConfUser
-from .idiomas           import Idiomas
-from .disassembly_bytes import print_instrucciones, disassemble_file
-from .ofuscator_call    import FuncFormat, print_color_c_format
-from .load_conf_user    import ConfUser
+from fram_package.idiomas           import Idiomas
+from fram_package.disassembly_bytes import print_instrucciones, disassemble_file
+from fram_package.ofuscator_call    import FuncFormat, print_color_c_format
+from fram_package.load_conf_user    import ConfUser
 
 def main():
-    
+
     user_conf = ConfUser()                   # cargar la configuracion de usuario
     parser = ParserClass(user_conf.lenguaje) # obtener los parametros de la CLI
     idioma = Idiomas(parser.parser.lenguaje)

@@ -4,7 +4,7 @@ from sys                import platform, version_info
 class ThisSysten:
     def __init__(self):
         self.this_platform  = self.get_platform()
-        self.splas          = self.get_splas()
+        self.splas          = self.get_separator()
         self.version_python = [version_info.major, version_info.minor]
 
     def get_platform(self) -> str:
@@ -26,7 +26,7 @@ class ThisSysten:
 
         return platform
 
-    def get_splas(self) -> str:
+    def get_separator(self) -> str:
         """
                     descripcion
                 Args:
